@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">DoSplash</string>
+    <string name="text_splash_screen">Free photos from unsplash</string>
+    <string name="text_header">Top photos from unsplash</string>
+    <string name="text_no_internet">No internet connection</string>
+</resources>
