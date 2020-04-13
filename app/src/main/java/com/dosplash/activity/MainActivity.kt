@@ -6,7 +6,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.dosplash.*
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import com.dosplash.R
 import com.dosplash.adapter.ImageAdapter
 import com.dosplash.interfacePkg.APIInterface
 import com.dosplash.interfacePkg.ApiCallBack
@@ -18,7 +19,7 @@ import com.dosplash.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 
-class MainActivity : AppCompatActivity(), ApiCallBack {
+class MainActivity : AppCompatActivity(), ApiCallBack, OnRefreshListener {
     private var mPhotosList: ArrayList<PhotosModel> = ArrayList()
     private var mImageAdapter: ImageAdapter? = null
     private var apiInterface: APIInterface? = null
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity(), ApiCallBack {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        swipeRefreshLayout.setOnRefreshListener(this);
         rv_image.layoutManager = LinearLayoutManager(this)
         mImageAdapter = ImageAdapter(this, mPhotosList)
         rv_image.adapter = mImageAdapter
@@ -41,17 +43,7 @@ class MainActivity : AppCompatActivity(), ApiCallBack {
         progressBarMain.visibility = View.VISIBLE
         apiInterface = APIClient.getClient()
             .create(APIInterface::class.java)
-        if (Utils.isNetworkAvailable(this)) {
-            val callRandomImage: Call<PhotosModel?>? = apiInterface?.doGetRandomImage()
-            ApiCall.apiRandomCall(
-                Constant.randomReqType,
-                callRandomImage,
-                this
-            )
-        } else onRequestFail(
-            Constant.noInternetReqType, getString(
-                R.string.text_no_internet
-            ))
+        callRandomImage()
 
     }
 
@@ -73,6 +65,7 @@ class MainActivity : AppCompatActivity(), ApiCallBack {
                     isLoading = false
                     progressBar.visibility = View.GONE
                     progressBarMain.visibility = View.GONE
+                    swipeRefreshLayout.isRefreshing = false;
                     mImageAdapter?.notifyItemRangeInserted(startingPoint, mPhotosList.size)
                 }
             }
@@ -83,8 +76,15 @@ class MainActivity : AppCompatActivity(), ApiCallBack {
         isLoading = false
         progressBar.visibility = View.GONE
         progressBarMain.visibility = View.GONE
+        swipeRefreshLayout.isRefreshing = false;
         Toast.makeText(this, result, Toast.LENGTH_LONG).show()
     }
+
+
+    override fun onRefresh() {
+        callRandomImage()
+    }
+
 
     inner class EndlessScrollListener(
         layoutManager: LinearLayoutManager
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(), ApiCallBack {
             val totalItemCount: Int = mLayoutManager.itemCount
 
             val l = visibleItemCount + firstVisibleItem
-            if (l >= totalItemCount - 4 && !isLoading) {
+            if (l >= totalItemCount - 4 && !isLoading && mPhotosList.size > 1) {
                 callPagination()
             }
         }
@@ -120,5 +120,24 @@ class MainActivity : AppCompatActivity(), ApiCallBack {
                 R.string.text_no_internet
             ))
 
+    }
+
+    private fun callRandomImage() {
+        if (Utils.isNetworkAvailable(this)) {
+            page = 0
+            val itemCount = mPhotosList.size;
+            mPhotosList.clear()
+            mImageAdapter?.notifyItemRangeRemoved(0, itemCount)
+            val callRandomImage: Call<PhotosModel?>? = apiInterface?.doGetRandomImage()
+            ApiCall.apiRandomCall(
+                Constant.randomReqType,
+                callRandomImage,
+                this
+            )
+        } else onRequestFail(
+            Constant.noInternetReqType, getString(
+                R.string.text_no_internet
+            )
+        )
     }
 }

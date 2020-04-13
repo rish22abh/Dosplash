@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/iv_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -16,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
 
-    <ImageView
+    <!--<ImageView
         android:id="@+id/iv_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,41 +25,47 @@
         android:src="@drawable/ic_search"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription" />-->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_image"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@id/progressBar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_search" />
+        app:layout_constraintTop_toBottomOf="@+id/iv_logo">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:padding="10dp"
         android:indeterminateTint="@color/color_81d5d8"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:padding="10dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        style="?android:attr/progressBarStyleSmall"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-     <ProgressBar
+    <ProgressBar
         android:id="@+id/progressBarMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:padding="10dp"
         android:indeterminateTint="@color/color_81d5d8"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
