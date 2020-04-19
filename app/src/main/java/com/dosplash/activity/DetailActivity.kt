@@ -3,42 +3,28 @@ package com.dosplash.activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import androidx.databinding.DataBindingUtil
 import com.dosplash.R
+import com.dosplash.databinding.ActivityDetailBinding
 import com.dosplash.model.PhotosModel
-import com.dosplash.utils.Utils
-import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail)
+        val mDetailDataBinding: ActivityDetailBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_detail)
 
         val photosModel = intent?.getParcelableExtra("model") as PhotosModel
+        mDetailDataBinding.details = photosModel
+        mDetailDataBinding.click = this
+    }
 
-        Utils.setImageDimenstion(this, iv_image, photosModel)
-        Glide.with(this).load(photosModel.urls?.full)
-            .thumbnail(Glide.with(this).load(photosModel.urls?.thumb))
-            .into(iv_image)
+    fun textVisibility(text: String?): Int {
+        return if (text == null) View.GONE
+        else View.VISIBLE
+    }
 
-        Glide.with(this).load(photosModel.user?.profile_image?.large)
-            .thumbnail(Glide.with(this).load(photosModel.user?.profile_image?.small))
-            .transform(CircleCrop())
-            .into(iv_profile);
-
-        if (photosModel.user?.location != null) {
-            textLocation.visibility = View.VISIBLE
-            textLocation.text = photosModel.user?.location
-        } else textLocation.visibility = View.GONE
-
-        if (photosModel.user?.bio != null) {
-            textDesc.visibility = View.VISIBLE
-            textDesc.text = photosModel.user?.bio
-        } else textDesc.visibility = View.GONE
-
-        textUser.text = photosModel.user?.name
-
-        iv_close.setOnClickListener { finish() }
+    fun finishActivity() {
+        finish()
     }
 }

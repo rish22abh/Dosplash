@@ -1,30 +1,15 @@
 package com.dosplash.utils
 
-import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
-import android.util.DisplayMetrics
 import android.widget.ImageView
-import com.dosplash.model.PhotosModel
 import kotlin.math.roundToInt
 
 class Utils {
     companion object{
-        fun getDeviceWidth(aActivity: Activity?): Int {
+        private fun getDeviceWidth(mContext: Context?): Int? {
             return try {
-                val displayMetrics = DisplayMetrics()
-                aActivity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
-                return displayMetrics.widthPixels
-            } catch (e: Exception) {
-                0
-            }
-        }
-
-        fun getDeviceHeight(aActivity: Activity?): Int {
-            return try {
-                val displayMetrics = DisplayMetrics()
-                aActivity?.windowManager?.defaultDisplay?.getMetrics(displayMetrics)
-                return displayMetrics.heightPixels
+               return mContext?.resources?.displayMetrics?.widthPixels
             } catch (e: Exception) {
                 0
             }
@@ -37,14 +22,14 @@ class Utils {
             return activeNetworkInfo != null && activeNetworkInfo.isConnected
         }
 
-        fun setImageDimenstion(
-            mContext: Activity,
+        fun setImageDimen(
+            mContext: Context,
             mImage: ImageView,
-            photosModel: PhotosModel
+            mImageWidth: Int,
+            mImageHeight: Int
         ) {
-            val width =
-                getDeviceWidth(mContext)
-            val ar:Float = (photosModel.height.toFloat() /photosModel.width.toFloat())
+            val width = getDeviceWidth(mContext) ?: return
+            val ar:Float = (mImageHeight.toFloat() /mImageWidth.toFloat())
             val height = width * ar
             val layoutParams = mImage.layoutParams
             layoutParams.width = width

@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), ApiCallBack, OnRefreshListener {
 
         swipeRefreshLayout.setOnRefreshListener(this);
         rv_image.layoutManager = LinearLayoutManager(this)
-        mImageAdapter = ImageAdapter(this, mPhotosList)
+        mImageAdapter = ImageAdapter(mPhotosList)
         rv_image.adapter = mImageAdapter
         rv_image.addOnScrollListener(
             EndlessScrollListener(

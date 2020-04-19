@@ -1,31 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/iv_item"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+    <data>
 
-    <ImageView
-        android:id="@+id/iv_profile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="8dp"
-        android:padding="2dp"
-        android:background="@drawable/circle_border_white"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_item"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:ignore="ContentDescription" />
+        <variable
+            name="item"
+            type="com.dosplash.model.PhotosModel" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <variable
+            name="click"
+            type="com.dosplash.adapter.ImageAdapter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageView
+            android:id="@+id/iv_item"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:onClick="@{(view)->click.intentDetailActivity(view,item)}"
+            app:imageHeight="@{item.height}"
+            app:imageWidth="@{item.width}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:mainUrl="@{item.urls.regular}"
+            app:thumbUrl="@{item.urls.small}"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/circle_border_white"
+            android:padding="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_item"
+            app:layout_constraintRight_toRightOf="parent"
+            app:mainUrl="@{item.user.profile_image.large}"
+            app:thumbUrl="@{item.user.profile_image.small}"
+            tools:ignore="ContentDescription" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
